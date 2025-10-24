@@ -13,11 +13,15 @@ export function ModeToggle() {
   React.useEffect(() => {
     setMounted(true);
   }, []);
-  if (!mounted) {
+
+ if (!mounted) {
+  return (
     <Button variant="outline" size="icon" disabled>
       <Sun className="h-[1.2rem] w-[1.2rem]" />
-    </Button>;
-  }
+    </Button>
+  );
+}
+
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   const toggleTheme = () => {
@@ -40,7 +44,7 @@ export function ModeToggle() {
             exit={{ rotate: 90, scale: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Sun className="h-[1.2rem] w-[1.2rem]" />
+            <Sun className="h-[1.2rem] w-[1.2rem] text-primary" />
           </motion.div>
         ) : (
           <motion.div

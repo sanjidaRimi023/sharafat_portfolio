@@ -1,51 +1,82 @@
-'use client'
-import React from 'react';
-import { motion, Variants } from 'framer-motion';
-import { Home, Settings, Bell, User } from 'lucide-react';
-import { ModeToggle } from './mode-toggle';
+"use client";
+import React, { useState } from "react";
+import { motion, Variants } from "framer-motion";
+import {
+  Home,
 
-// --- MenuBar Component ---
+  Github,
+  Linkedin,
+  Mail,
+  Menu,
+  X,
+  Code,
 
-interface MenuItem {
-  icon: React.ReactNode;
-  label: string;
-  href: string;
-  
-  iconColor: string;
-}
+  FolderGit,
+  Briefcase,
+  Phone,
+  File,
+} from "lucide-react";
+import { ModeToggle } from "./mode-toggle";
+import Image from "next/image";
 
-const menuItems: MenuItem[] = [
+const socialLinks = [
+  {
+    name: "GitHub",
+    path: "https://github.com/sanjidaRimi023",
+    icon: <Github size={18} />,
+  },
+  {
+    name: "LinkedIn",
+    path: "https://www.linkedin.com/in/sanjida-akter-rimi711909",
+    icon: <Linkedin size={18} />,
+  },
+  {
+    name: "Email",
+    path: "mailto:sanjidarimi023@gmail.com",
+    icon: <Mail size={18} />,
+  },
+];
+
+const menuItems = [
   {
     icon: <Home className="h-5 w-5" />,
     label: "Home",
     href: "#",
-  
-    iconColor: "group-hover:text-blue-500 dark:group-hover:text-blue-400",
+    iconColor: "group-hover:text-[#03d9d7] dark:group-hover:text-[#03d9d7]",
   },
   {
-    icon: <Bell className="h-5 w-5" />,
-    label: "Notifications",
+    icon: <Code className="h-5 w-5" />,
+    label: "Skills",
     href: "#",
-    
-    iconColor: "group-hover:text-blue-500 dark:group-hover:text-blue-400",
+    iconColor: "group-hover:text-[#03d9d7] dark:group-hover:text-[#03d9d7]",
   },
   {
-    icon: <Settings className="h-5 w-5" />,
-    label: "Settings",
+    icon: <FolderGit className="h-5 w-5" />,
+    label: "Projects",
     href: "#",
- 
-    iconColor: "group-hover:text-blue-500 dark:group-hover:text-blue-400",
+    iconColor: "group-hover:text-[#03d9d7] dark:group-hover:text-[#03d9d7]",
   },
   {
-    icon: <User className="h-5 w-5" />,
-    label: "Profile",
+    icon: <Briefcase className="h-5 w-5" />,
+    label: "Service",
     href: "#",
-  
-    iconColor: "group-hover:text-blue-500 dark:group-hover:text-blue-400",
+    iconColor: "group-hover:text-[#03d9d7] dark:group-hover:text-[#03d9d7]",
   },
+  {
+    icon: <Phone className="h-5 w-5" />,
+    label: "Contact",
+    href: "#",
+    iconColor: "group-hover:text-[#03d9d7] dark:group-hover:text-[#03d9d7]",
+  },
+  {
+    icon: <File className="h-5 w-5" />,
+    label: "Resume",
+    href: "#",
+    iconColor: "group-hover:text-[#03d9d7] dark:group-hover:text-[#03d9d7]",
+  },
+
 ];
 
-// Animation variants for different parts of the menu
 const itemVariants: Variants = {
   initial: { rotateX: 0, opacity: 1 },
   hover: { rotateX: -90, opacity: 0 },
@@ -62,19 +93,8 @@ const glowVariants: Variants = {
     opacity: 1,
     scale: 2,
     transition: {
-      opacity: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+      opacity: { duration: 0.5 },
       scale: { duration: 0.5, type: "spring", stiffness: 300, damping: 25 },
-    },
-  },
-};
-
-const navGlowVariants: Variants = {
-  initial: { opacity: 0 },
-  hover: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.4, 0, 0.2, 1],
     },
   },
 };
@@ -86,77 +106,138 @@ const sharedTransition = {
   duration: 0.5,
 };
 
-function MenuBar(): React.JSX.Element {
+function MenuBar() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <motion.nav
-      className="p-2 rounded-2xl bg-white/60 dark:bg-black/60 backdrop-blur-lg border border-gray-200/80 dark:border-gray-800/80 shadow-lg dark:shadow-gray-900/20 overflow-hidden"
+      className="w-full flex flex-col items-center border-b border-gray-300 dark:border-gray-700 py-4"
       initial="initial"
-      whileHover="hover"
     >
-      <motion.div
-        className="rounded-3xl z-0 pointer-events-none"
-        variants={navGlowVariants}
-      />
-      <ul className="flex items-center gap-2 justify-center">
-        {menuItems.map((item: MenuItem) => (
-          <motion.li key={item.label} className="relative">
-            <motion.div
-              className="block rounded-xl overflow-visible group relative"
-              style={{ perspective: "600px" }}
-              whileHover="hover"
-              initial="initial"
-            >
-              {/* Glow effect on hover */}
+      {/* Top Section */}
+      <div className="w-full flex items-center justify-between px-6 md:px-10">
+        {/* Logo */}
+        <Image
+          src="/logo.png"
+          alt="logo"
+          width={150}
+          height={100}
+          className="object-contain"
+        />
+
+       
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-gray-700 dark:text-gray-200"
+        >
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+
+        {/* Desktop Nav */}
+        <motion.ul className="hidden md:flex items-center gap-6 justify-center">
+          {menuItems.map((item) => (
+            <motion.li key={item.label} className="relative">
               <motion.div
-                className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
-                variants={glowVariants}
-                style={{
-                 
-                  opacity: 0,
-                }}
-              />
-              {/* Front-facing menu item */}
-              <motion.a
-                href={item.href}
-                className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors rounded-xl"
-                variants={itemVariants}
-                transition={sharedTransition}
-                style={{
-                  transformStyle: "preserve-3d",
-                  transformOrigin: "center bottom"
-                }}
+                className="block rounded-xl overflow-visible group relative"
+                style={{ perspective: "600px" }}
+                whileHover="hover"
+                initial="initial"
               >
-                <span className={`transition-colors duration-300 ${item.iconColor}`}>
-                  {item.icon}
-                </span>
-                <span className="font-medium">{item.label}</span>
-              </motion.a>
-              {/* Back-facing menu item for the 3D flip effect */}
-              <motion.a
-                href={item.href}
-                className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors rounded-xl"
-                variants={backVariants}
-                transition={sharedTransition}
-                style={{
-                  transformStyle: "preserve-3d",
-                  transformOrigin: "center top",
-                  transform: "rotateX(90deg)"
-                }}
-              >
-                <span className={`transition-colors duration-300 ${item.iconColor}`}>
-                  {item.icon}
-                </span>
-                <span className="font-medium">{item.label}</span>
-              </motion.a>
+                {/* Glow effect */}
+                <motion.div
+                  className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
+                  variants={glowVariants}
+                  style={{ opacity: 0 }}
+                />
+             
+                <motion.a
+                  href={item.href}
+                  className="flex items-center gap-2 px-3 py-2 relative z-10 text-gray-600 dark:text-gray-300 group-hover:text-white transition-colors rounded-xl"
+                  variants={itemVariants}
+                  transition={sharedTransition}
+                  style={{
+                    transformStyle: "preserve-3d",
+                    transformOrigin: "center bottom",
+                  }}
+                >
+                  <span className={item.iconColor}>{item.icon}</span>
+                  <span className="font-medium text-sm md:text-base">
+                    {item.label}
+                  </span>
+                </motion.a>
               
-            </motion.div>
-            
-          </motion.li>
-          
-        ))}
-          <ModeToggle/>
-      </ul>
-    
+                <motion.a
+                  href={item.href}
+                  className="flex items-center gap-2 px-3 py-2 absolute inset-0 z-10 transition-colors rounded-xl"
+                  variants={backVariants}
+                  transition={sharedTransition}
+                  style={{
+                    transformStyle: "preserve-3d",
+                    transformOrigin: "center top",
+                    transform: "rotateX(90deg)",
+                  }}
+                >
+                  <span className={item.iconColor}>{item.icon}</span>
+                  <span className="font-medium text-sm md:text-base">
+                    {item.label}
+                  </span>
+                </motion.a>
+              </motion.div>
+            </motion.li>
+          ))}
+        </motion.ul>
+
+        {/* Social + Mode */}
+        <div className="hidden md:flex items-center gap-4">
+          {socialLinks.map((item) => (
+            <motion.a
+              whileHover={{ scale: 1.2 }}
+              key={item.name}
+              href={item.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary border rounded-full p-2 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              {item.icon}
+            </motion.a>
+          ))}
+          <ModeToggle />
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <motion.ul
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col gap-4 mt-4 items-center md:hidden"
+        >
+          {menuItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-[#03d9d7]"
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </a>
+          ))}
+          <div className="flex gap-4 mt-3">
+            {socialLinks.map((item) => (
+              <a
+                key={item.name}
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary border rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                {item.icon}
+              </a>
+            ))}
+            <ModeToggle />
+          </div>
+        </motion.ul>
+      )}
     </motion.nav>
   );
 }
